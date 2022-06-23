@@ -1,9 +1,26 @@
 package routers
 
-import "github.com/gin-gonic/gin"
+import (
+	// "go_practiceapp/model"
+	"github.com/gin-gonic/gin"
+	"go_practiceapp/database"
+	"go_practiceapp/model"
+	"net/http"
+	"log"
+)
 
 func NewUser(c *gin.Context){
-	c.JSON(200, gin.H{ "message": "list", })
+	var form model.Users
+    if err := c.Bind(&form); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+		log.Println(err)
+        return
+    }
+	if err := database.Create_User(&form);err != nil {
+		c.JSON(400, gin.H{ "message": "Bad request", })
+	} else {
+		c.JSON(200, gin.H{ "message": "User Created", })
+	}
 }
 
 func EditUser(c *gin.Context){
