@@ -10,13 +10,20 @@ services:
     volumes:
       - .:/go/src
     tty: true
+    depends_on:
+      - "db"
+
 
   db:
     container_name: db
     image: mysql:8.0.15
-    volumes:
-      - ./tmp/mysql:/var/lib/mysql
+    # volumes:
+    #   - ./tmp/mysql:/var/lib/mysql
     environment:
       MYSQL_DATABASE: gin_app
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     command: mysqld
+    cap_add:
+      - SYS_NICE  
+    # depends_on:
+    #   - "app"
