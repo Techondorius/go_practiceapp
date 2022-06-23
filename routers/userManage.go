@@ -1,16 +1,26 @@
 package routers
 
 import (
-	"go_practiceapp/model"
+	// "go_practiceapp/model"
 	"github.com/gin-gonic/gin"
 	"go_practiceapp/database"
+	"go_practiceapp/model"
+	"net/http"
+	"log"
 )
 
 func NewUser(c *gin.Context){
-	db := database.Connection()
-    // defer db.Close()
-	db.Create(&model.Users{FirstName: "Kyosuke", LastName: "Fujita"})
-	c.JSON(200, gin.H{ "message": "list", })
+	var form model.Users
+    if err := c.Bind(&form); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+		log.Println(err)
+        return
+    }
+	if err := database.Create_User(&form);err != nil {
+		c.JSON(400, gin.H{ "message": "Bad request", })
+	} else {
+		c.JSON(200, gin.H{ "message": "User Created", })
+	}
 }
 
 func EditUser(c *gin.Context){

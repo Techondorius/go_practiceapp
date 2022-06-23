@@ -3,8 +3,8 @@ package model
 // "gorm.io/gorm"
 
 type Users struct {
-	ID        int
-	FirstName string
-	LastName  string
-	Stamps    Stamps
+	ID           int	`gorm:"primaryKey"`
+	FirstName string	`gorm:"not null" binding:"required"`
+	LastName  string	`gorm:"not null" binding:"required"`
+	Stamps  []Stamps	`gorm:"foreignKey:UsersID"`
 }

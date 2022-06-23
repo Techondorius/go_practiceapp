@@ -3,6 +3,7 @@ package database
 import (
 	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
+    "go_practiceapp/model"
 )
 
 func Connection() *gorm.DB {
@@ -15,4 +16,15 @@ func Connection() *gorm.DB {
 	}
 	return db
 
+}
+
+func Create_User(User *model.Users) error {
+	db := Connection()
+	user := model.Users{FirstName: User.FirstName, LastName: User.LastName}
+	result := db.Create(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
