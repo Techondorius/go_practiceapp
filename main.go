@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	
+
 	"go_practiceapp/routers"
 )
 
@@ -20,7 +20,7 @@ func main(){
 	stamp := r.Group("/stamp/:userId")
 	{
 		stamp.POST("/in", routers.User_in)
-		stamp.POST("/up", routers.User_in)
+		stamp.POST("/up", routers.User_up)
 	}
 
 	r.GET("/", func(c *gin.Context) {

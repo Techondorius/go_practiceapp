@@ -6,9 +6,8 @@ import (
 )
 
 func main() {
-    db := database.Connection()
-    // defer db.Close()
+	db := database.Connection()
 
-    db.AutoMigrate(&model.Users{})
+	db.AutoMigrate(&model.Users{})
 	db.AutoMigrate(&model.Stamps{})
 }
