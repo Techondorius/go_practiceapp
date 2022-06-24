@@ -7,6 +7,7 @@ import (
 	"go_practiceapp/model"
 	"net/http"
 	"log"
+	"strconv"
 )
 
 func NewUser(c *gin.Context){
@@ -16,7 +17,7 @@ func NewUser(c *gin.Context){
 		log.Println(err)
         return
     }
-	if err := database.Create_User(&form);err != nil {
+	if err := database.Create_User(&form); err != nil {
 		c.JSON(400, gin.H{ "message": "Bad request", })
 	} else {
 		c.JSON(200, gin.H{ "message": "User Created", })
@@ -24,7 +25,23 @@ func NewUser(c *gin.Context){
 }
 
 func EditUser(c *gin.Context){
+	var form model.Users
+	err := c.Bind(&form)
+	var err2 error
+	form.ID, err2 = strconv.Atoi(c.Param("userId"))
+	log.Println(form)
 
+    if err != nil || err2 != nil{
+        c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+		log.Println(err, err2)
+        return
+    }
+
+	if err := database.Update_User(&form); err != nil {
+		c.JSON(400, gin.H{ "message": "Bad request", })
+	} else {
+		c.JSON(200, gin.H{ "message": "User Created", })
+	}
 }
 
 func DeleteUser(c *gin.Context){
