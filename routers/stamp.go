@@ -14,11 +14,11 @@ import (
 
 func User_in(c *gin.Context){
 	userid, _ := strconv.Atoi(c.Param("userId"))
-	var form model.Stamps
 
-	form = model.Stamps{
+	form := model.Stamps{
 		Stamp_datetime: time.Now(),
 		UsersID: userid,
+		Type: "in",
 	}
 
 	if err := c.Bind(&form); err != nil {
@@ -26,7 +26,7 @@ func User_in(c *gin.Context){
 		log.Println(err)
 		return
 	}
-	if err := database.Stamp_in(&form, "in"); err != nil {
+	if err := database.Stamp_in(&form); err != nil {
 		c.JSON(400, gin.H{ "message": "list", })
 		log.Println(err)
 	} else {
@@ -36,11 +36,11 @@ func User_in(c *gin.Context){
 
 func User_up(c *gin.Context){
 	userid, _ := strconv.Atoi(c.Param("userId"))
-	var form model.Stamps
 
-	form = model.Stamps{
+	form := model.Stamps{
 		Stamp_datetime: time.Now(),
 		UsersID: userid,
+		Type: "up",
 	}
 
 	if err := c.Bind(&form); err != nil {
@@ -48,7 +48,7 @@ func User_up(c *gin.Context){
 		log.Println(err)
 		return
 	}
-	if err := database.Stamp_in(&form, "up"); err != nil {
+	if err := database.Stamp_in(&form); err != nil {
 		c.JSON(400, gin.H{ "message": "list", })
 		log.Println(err)
 	} else {
