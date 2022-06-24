@@ -13,11 +13,11 @@ import (
 
 func NewUser(c *gin.Context){
 	var form model.Users
-    if err := c.Bind(&form); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+	if err := c.Bind(&form); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
 		log.Println(err)
-        return
-    }
+		return
+	}
 	if err := database.Create_User(&form); err != nil {
 		c.JSON(400, gin.H{ "message": "Bad request", })
 	} else {
@@ -32,11 +32,11 @@ func EditUser(c *gin.Context){
 	form.ID, err2 = strconv.Atoi(c.Param("userId"))
 	log.Println(form)
 
-    if err != nil || err2 != nil{
-        c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+	if err != nil || err2 != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
 		log.Println(err, err2)
-        return
-    }
+		return
+	}
 
 	if err := database.Update_User(&form); err != nil {
 		c.JSON(400, gin.H{ "message": "Bad request", })
