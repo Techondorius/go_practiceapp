@@ -1,10 +1,12 @@
 package routers
 
 import (
-	"go_practiceapp/model"
-	"github.com/gin-gonic/gin"
-	"go_practiceapp/database"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+
+	"go_practiceapp/database"
+	"go_practiceapp/model"
 )
 
 func User_in(c *gin.Context){

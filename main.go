@@ -1,10 +1,9 @@
 package main
 
 import (
-	// "fmt"
 	"github.com/gin-gonic/gin"
+	
 	"go_practiceapp/routers"
-	// "go_practiceapp/database"
 )
 
 func main(){

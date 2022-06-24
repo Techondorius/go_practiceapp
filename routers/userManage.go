@@ -1,13 +1,14 @@
 package routers
 
 import (
-	// "go_practiceapp/model"
+	"strconv"
+	"log"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+
 	"go_practiceapp/database"
 	"go_practiceapp/model"
-	"net/http"
-	"log"
-	"strconv"
 )
 
 func NewUser(c *gin.Context){

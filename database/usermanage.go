@@ -1,9 +1,10 @@
 package database
 
 import (
-    "go_practiceapp/model"
 	"log"
 	"errors"
+
+	"go_practiceapp/model"
 )
 
 func Create_User(User *model.Users) error {
