@@ -12,6 +12,9 @@ services:
     tty: true
     depends_on:
       - "db"
+    environment:
+      TZ: Asia/Tokyo
+
 
 
   db:
@@ -20,10 +23,12 @@ services:
     # volumes:
     #   - ./tmp/mysql:/var/lib/mysql
     environment:
+      TZ: Asia/Tokyo
       MYSQL_DATABASE: gin_app
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     command: mysqld
     cap_add:
-      - SYS_NICE  
+      - SYS_NICE
+
     # depends_on:
     #   - "app"
