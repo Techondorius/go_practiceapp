@@ -39,6 +39,28 @@ func NewUser(c *gin.Context){
 	}
 }
 
+func ShowUser(c *gin.Context){
+	if responce, err :=database.Read_User(); err != nil {
+		c.JSON(400, gin.H{
+			"message": "Bad request",
+			"detail": "something error has occured",
+		})
+	} else {
+		var user_list []model.Users_noStamps
+		for _, responce_i := range responce{
+			user_list = append(user_list, model.Users_noStamps{
+				ID : responce_i.ID,
+				FirstName : responce_i.FirstName,
+				LastName : responce_i.LastName,
+			})
+		}
+
+		c.JSON(200, gin.H{
+			"detail": user_list,
+		})
+	}
+}
+
 func EditUser(c *gin.Context){
 	var form model.Users
 	err := c.Bind(&form)

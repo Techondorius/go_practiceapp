@@ -18,3 +18,9 @@ type Users struct {
 	LastName  string			`gorm:"not null" binding:"required"`
 	Stamps  []Stamps			`gorm:"foreignKey:UsersID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
+
+type Users_noStamps struct {
+	ID           int
+	FirstName string
+	LastName  string
+}

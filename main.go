@@ -13,6 +13,7 @@ func main(){
 	userManage := r.Group("/userManage")
 	{
 		userManage.POST("/newUser", routers.NewUser)
+		userManage.GET("/getUser", routers.ShowUser)
 		userManage.PUT("/editUser/:userId", routers.EditUser)
 		userManage.DELETE("/deleteUser/:userId", routers.DeleteUser)
 	}
