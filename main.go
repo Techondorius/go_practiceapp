@@ -21,11 +21,16 @@ func main(){
 	stamp := r.Group("/stamp/:userId")
 	{
 		stamp.POST("/in", routers.User_in)
-		stamp.POST("/up", routers.User_up)
+		stamp.PUT("/up", routers.User_up)
 	}
 	list:= r.Group("/list")
 	{
 		list.GET("/byUser/:userId", routers.Stamps_by_user)
+	}
+
+	edit:= r.Group("/edit")
+	{
+		edit.DELETE("/:stampId", routers.Stamp_delete)
 	}
 
 	r.GET("/", func(c *gin.Context) {
