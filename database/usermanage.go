@@ -20,6 +20,18 @@ func Create_User(User *model.Users) (model.Users, error) {
 	return user, nil
 }
 
+func Read_User() ([]model.Users, error) {
+	var users []model.Users
+	db := Connection()
+	result := db.Find(&users)
+	log.Println(result.RowsAffected)
+	if result.Error != nil {
+		return nil, result.Error
+	} else {
+		return users, result.Error
+	}
+}
+
 func Update_User(User *model.Users) error {
 	db := Connection()
 	var user model.Users
