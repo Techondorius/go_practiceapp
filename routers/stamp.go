@@ -26,8 +26,8 @@ func User_in(c *gin.Context){
 		log.Println(err)
 		return
 	}
-	if err := database.Stamp_in(&form); err != nil {
-		c.JSON(400, gin.H{ "message": "list", })
+	if err := database.Stamp_create(&form); err != nil {
+		c.JSON(400, gin.H{ "status": "list", })
 		log.Println(err)
 	} else {
 		c.JSON(200, gin.H{ "message": "list", })
@@ -48,7 +48,7 @@ func User_up(c *gin.Context){
 		log.Println(err)
 		return
 	}
-	if err := database.Stamp_in(&form); err != nil {
+	if err := database.Stamp_create(&form); err != nil {
 		c.JSON(400, gin.H{ "message": "list", })
 		log.Println(err)
 	} else {

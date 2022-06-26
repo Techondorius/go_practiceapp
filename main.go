@@ -23,6 +23,10 @@ func main(){
 		stamp.POST("/in", routers.User_in)
 		stamp.POST("/up", routers.User_up)
 	}
+	list:= r.Group("/list")
+	{
+		list.GET("/byUser/:userId", routers.Stamps_by_user)
+	}
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{ "message": "good", })
