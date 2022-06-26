@@ -2,14 +2,14 @@ package model
 
 import (
 	"time"
-	"gorm.io/gorm"
+	// "gorm.io/gorm"
 )
 
 type Stamps struct {
-	gorm.Model
+	ID				int			`gorm:"primaryKey"`
 	UsersID 		int			`gorm:"not null;" binding:"required"`
-	Type			string		`gorm:"not null" binding:"required"`
-	Stamp_datetime	time.Time	`gorm:"not null" binding:"required"`
+	In_datetime		time.Time
+	Up_datetime 	*time.Time
 }
 
 type Users struct {

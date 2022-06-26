@@ -16,9 +16,8 @@ func User_in(c *gin.Context){
 	userid, _ := strconv.Atoi(c.Param("userId"))
 
 	form := model.Stamps{
-		Stamp_datetime: time.Now(),
+		In_datetime: time.Now(),
 		UsersID: userid,
-		Type: "in",
 	}
 
 	if err := c.Bind(&form); err != nil {
@@ -27,7 +26,7 @@ func User_in(c *gin.Context){
 		return
 	}
 	if err := database.Stamp_create(&form); err != nil {
-		c.JSON(400, gin.H{ "status": "list", })
+		c.JSON(400, gin.H{ "status": err.Error(), })
 		log.Println(err)
 	} else {
 		c.JSON(200, gin.H{ "message": "list", })
@@ -36,20 +35,20 @@ func User_in(c *gin.Context){
 
 func User_up(c *gin.Context){
 	userid, _ := strconv.Atoi(c.Param("userId"))
+	up_datetime := time.Now()
 
-	form := model.Stamps{
-		Stamp_datetime: time.Now(),
-		UsersID: userid,
-		Type: "up",
-	}
-
-	if err := c.Bind(&form); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+	if err := database.Put_up_datetime(userid, up_datetime); err != nil {
+		c.JSON(400, gin.H{ "status": err.Error(), })
 		log.Println(err)
-		return
+	} else {
+		c.JSON(200, gin.H{ "message": "list", })
 	}
-	if err := database.Stamp_create(&form); err != nil {
-		c.JSON(400, gin.H{ "message": "list", })
+}
+
+func Stamp_delete(c *gin.Context){
+	id, _ := strconv.Atoi(c.Param("stampId"))
+	if err := database.Delete_stamp(id); err != nil {
+		c.JSON(400, gin.H{ "status": err.Error(), })
 		log.Println(err)
 	} else {
 		c.JSON(200, gin.H{ "message": "list", })
