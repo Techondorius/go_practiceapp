@@ -21,15 +21,18 @@ func User_in(c *gin.Context){
 	}
 
 	if err := c.Bind(&form); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
 		log.Println(err)
 		return
 	}
-	if err := database.Stamp_create(&form); err != nil {
-		c.JSON(400, gin.H{ "status": err.Error(), })
+	if user, err := database.Stamp_create(&form); err != nil {
+		c.JSON(400, gin.H{ "status": "Could not find user by id "})
 		log.Println(err)
 	} else {
-		c.JSON(200, gin.H{ "message": "list", })
+		c.JSON(200, gin.H{
+			"detail": user,
+			"message": "Stamped successfully",
+		})
 	}
 }
 
@@ -46,11 +49,14 @@ func User_up(c *gin.Context){
 }
 
 func Stamp_delete(c *gin.Context){
-	id, _ := strconv.Atoi(c.Param("stampId"))
-	if err := database.Delete_stamp(id); err != nil {
+	id, err := strconv.Atoi(c.Param("stampId"))
+	if err != nil {
+		c.JSON(400, gin.H{ "status": err.Error(), })
+		log.Println(err)
+	} else if err := database.Delete_stamp(id); err != nil {
 		c.JSON(400, gin.H{ "status": err.Error(), })
 		log.Println(err)
 	} else {
-		c.JSON(200, gin.H{ "message": "list", })
+		c.JSON(200, gin.H{ "message": "successfully up-ed", })
 	}
 }
