@@ -9,7 +9,6 @@ import (
 
 	"go_practiceapp/database"
 	"go_practiceapp/model"
-	// "encode/json"
 )
 
 func NewUser(c *gin.Context) {
@@ -46,13 +45,9 @@ func ShowUser(c *gin.Context) {
 			"detail":  "something error has occured",
 		})
 	} else {
-		var user_list []model.Users_noStamps
+		var user_list []any
 		for _, responce_i := range responce {
-			user_list = append(user_list, model.Users_noStamps{
-				ID:        responce_i.ID,
-				FirstName: responce_i.FirstName,
-				LastName:  responce_i.LastName,
-			})
+			user_list = append(user_list, responce_i.DropStamps())
 		}
 
 		c.JSON(200, gin.H{

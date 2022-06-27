@@ -16,18 +16,17 @@ func CreateStamp(Stamp *model.Stamps) (model.Stamps, error) {
 	return stamp, nil
 }
 
-func StampPutUpTime(userid int, up_datetime time.Time) error {
+func UpdateStampUpTime(userid int, up_datetime time.Time) error {
 	db := Connection()
 	var stamps []model.Stamps
 
-	if result := db.Debug().Model(&stamps).Where("users_id = ? AND up_datetime IS NULL AND in_datetime BETWEEN ? AND ?", userid, up_datetime.AddDate(0, 0, -1), up_datetime).Find(&stamps); result.RowsAffected < 1 {
+	if result := db.Debug().Where("users_id = ? AND up_datetime IS NULL AND in_datetime BETWEEN ? AND ?", userid, up_datetime.AddDate(0, 0, -1), up_datetime).Find(&stamps); result.RowsAffected < 1 {
 		return errors.New("couldn't find record where up_datetime is null")
 	} else if result.RowsAffected > 1 {
 		return errors.New("couldn't select record to edit because there are too many stamps today")
 	}
 
 	result := db.Debug().Model(&stamps).Where("id = ?", stamps[0].ID).Select("up_datetime").Updates(map[string]interface{}{"up_datetime": up_datetime})
-
 	if result.RowsAffected == 0 {
 		return errors.New("no records updated")
 	}

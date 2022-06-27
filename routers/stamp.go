@@ -40,7 +40,7 @@ func User_up(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	up_datetime := time.Now()
 
-	if err := database.StampPutUpTime(userid, up_datetime); err != nil {
+	if err := database.UpdateStampUpTime(userid, up_datetime); err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
 	} else {

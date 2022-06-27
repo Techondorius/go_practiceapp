@@ -18,8 +18,11 @@ type Users struct {
 	Stamps  []Stamps			`gorm:"foreignKey:UsersID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
-type Users_noStamps struct {
-	ID           int
-	FirstName string
-	LastName  string
+
+func (user Users) DropStamps() map[string]any {
+	return map[string]any{
+		"ID" : user.ID,
+		"FirstName" : user.FirstName,
+		"LastName" : user.LastName,
+	}
 }
