@@ -1,10 +1,10 @@
 package routers
 
 import (
-	"strconv"
-	"time"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -12,12 +12,12 @@ import (
 	"go_practiceapp/model"
 )
 
-func User_in(c *gin.Context){
+func User_in(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 
 	form := model.Stamps{
 		In_datetime: time.Now(),
-		UsersID: userid,
+		UsersID:     userid,
 	}
 
 	if err := c.Bind(&form); err != nil {
@@ -25,38 +25,38 @@ func User_in(c *gin.Context){
 		log.Println(err)
 		return
 	}
-	if user, err := database.Stamp_create(&form); err != nil {
-		c.JSON(400, gin.H{ "status": "Could not find user by id "})
+	if user, err := database.CreateStamp(&form); err != nil {
+		c.JSON(400, gin.H{"status": "Could not find user by id "})
 		log.Println(err)
 	} else {
 		c.JSON(200, gin.H{
-			"detail": user,
+			"detail":  user,
 			"message": "Stamped successfully",
 		})
 	}
 }
 
-func User_up(c *gin.Context){
+func User_up(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	up_datetime := time.Now()
 
-	if err := database.Put_up_datetime(userid, up_datetime); err != nil {
-		c.JSON(400, gin.H{ "status": err.Error(), })
+	if err := database.StampPutUpTime(userid, up_datetime); err != nil {
+		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
 	} else {
-		c.JSON(200, gin.H{ "message": "list", })
+		c.JSON(200, gin.H{"message": "list"})
 	}
 }
 
-func Stamp_delete(c *gin.Context){
+func Stamp_delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("stampId"))
 	if err != nil {
-		c.JSON(400, gin.H{ "status": err.Error(), })
+		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
-	} else if err := database.Delete_stamp(id); err != nil {
-		c.JSON(400, gin.H{ "status": err.Error(), })
+	} else if err := database.DeleteStamp(id); err != nil {
+		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
 	} else {
-		c.JSON(200, gin.H{ "message": "successfully up-ed", })
+		c.JSON(200, gin.H{"message": "successfully up-ed"})
 	}
 }

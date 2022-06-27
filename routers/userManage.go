@@ -1,9 +1,9 @@
 package routers
 
 import (
-	"strconv"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -12,7 +12,7 @@ import (
 	// "encode/json"
 )
 
-func NewUser(c *gin.Context){
+func NewUser(c *gin.Context) {
 	var form model.Users
 	if err := c.Bind(&form); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -22,36 +22,36 @@ func NewUser(c *gin.Context){
 		log.Println(err)
 		return
 	}
-	if responce, err := database.Create_User(&form); err != nil {
+	if responce, err := database.CreateUser(&form); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Bad request",
-			"detail": "something error has occured",
+			"detail":  "something error has occured",
 		})
 	} else {
 		c.JSON(200, gin.H{
 			"detail": map[string]any{
-				"ID": responce.ID,
+				"ID":        responce.ID,
 				"FirstName": responce.FirstName,
-				"LastName": responce.LastName,
+				"LastName":  responce.LastName,
 			},
 			"message": "Created",
 		})
 	}
 }
 
-func ShowUser(c *gin.Context){
-	if responce, err :=database.Read_User(); err != nil {
+func ShowUser(c *gin.Context) {
+	if responce, err := database.ReadUser(); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Bad request",
-			"detail": "something error has occured",
+			"detail":  "something error has occured",
 		})
 	} else {
 		var user_list []model.Users_noStamps
-		for _, responce_i := range responce{
+		for _, responce_i := range responce {
 			user_list = append(user_list, model.Users_noStamps{
-				ID : responce_i.ID,
-				FirstName : responce_i.FirstName,
-				LastName : responce_i.LastName,
+				ID:        responce_i.ID,
+				FirstName: responce_i.FirstName,
+				LastName:  responce_i.LastName,
 			})
 		}
 
@@ -61,13 +61,13 @@ func ShowUser(c *gin.Context){
 	}
 }
 
-func EditUser(c *gin.Context){
+func EditUser(c *gin.Context) {
 	var form model.Users
 	err := c.Bind(&form)
 	var err2 error
 	form.ID, err2 = strconv.Atoi(c.Param("userId"))
 
-	if err != nil || err2 != nil{
+	if err != nil || err2 != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "Bad Request",
 			"detail": "Request has bad value",
@@ -76,30 +76,30 @@ func EditUser(c *gin.Context){
 		return
 	}
 
-	if err := database.Update_User(&form); err != nil {
+	if err := database.UpdateUser(&form); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Bad request",
-			"detail": "no records edited",
+			"detail":  "no records edited",
 		})
 	} else {
 		c.JSON(200, gin.H{
 			"detail": map[string]any{
-				"ID": form.ID,
+				"ID":        form.ID,
 				"FirstName": form.FirstName,
-				"LastName": form.LastName,
+				"LastName":  form.LastName,
 			},
 			"message": "Updated",
 		})
 	}
 }
 
-func DeleteUser(c *gin.Context){
+func DeleteUser(c *gin.Context) {
 	var form model.Users
 	err := c.Bind(&form)
 	var err2 error
 	form.ID, err2 = strconv.Atoi(c.Param("userId"))
 
-	if err2 != nil{
+	if err2 != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "Bad Request",
 			"detail": "Request has bad value",
@@ -108,10 +108,10 @@ func DeleteUser(c *gin.Context){
 		return
 	}
 
-	if err := database.Delete_User(&form); err != nil {
+	if err := database.DeleteUser(&form); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Bad request",
-			"detail": "no records edited",
+			"detail":  "no records edited",
 		})
 	} else {
 		c.JSON(200, gin.H{

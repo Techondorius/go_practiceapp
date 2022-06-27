@@ -14,9 +14,9 @@ import (
 
 func Stamps_by_user(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
-	if responce, err := database.Stamp_read_by_id(userid); err != nil {
+	if responce, err := database.StampReadById(userid); err != nil {
 		log.Println(err)
 	} else {
-		c.JSON(200, gin.H{ "message": responce, })
+		c.JSON(200, gin.H{"message": responce})
 	}
 }
