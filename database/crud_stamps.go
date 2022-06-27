@@ -1,12 +1,12 @@
 package database
 
-import(
-	"time"
+import (
 	"errors"
 	"go_practiceapp/model"
+	"time"
 )
 
-func Stamp_create(Stamp *model.Stamps) (model.Stamps, error) {
+func CreateStamp(Stamp *model.Stamps) (model.Stamps, error) {
 	db := Connection()
 	stamp := model.Stamps{UsersID: Stamp.UsersID, In_datetime: Stamp.In_datetime, Up_datetime: nil}
 	result := db.Create(&stamp)
@@ -16,13 +16,13 @@ func Stamp_create(Stamp *model.Stamps) (model.Stamps, error) {
 	return stamp, nil
 }
 
-func Put_up_datetime(userid int, up_datetime time.Time) error {
+func StampPutUpTime(userid int, up_datetime time.Time) error {
 	db := Connection()
 	var stamps []model.Stamps
 
-	if result := db.Debug().Model(&stamps).Where("users_id = ? AND up_datetime IS NULL AND in_datetime BETWEEN ? AND ?", userid, up_datetime.AddDate(0, 0, -1), up_datetime).Find(&stamps); result.RowsAffected < 1{
+	if result := db.Debug().Model(&stamps).Where("users_id = ? AND up_datetime IS NULL AND in_datetime BETWEEN ? AND ?", userid, up_datetime.AddDate(0, 0, -1), up_datetime).Find(&stamps); result.RowsAffected < 1 {
 		return errors.New("couldn't find record where up_datetime is null")
-	} else if result.RowsAffected > 1{
+	} else if result.RowsAffected > 1 {
 		return errors.New("couldn't select record to edit because there are too many stamps today")
 	}
 
@@ -34,7 +34,7 @@ func Put_up_datetime(userid int, up_datetime time.Time) error {
 	return nil
 }
 
-func Stamp_read_by_id(userid int) ([]model.Stamps, error) {
+func StampReadById(userid int) ([]model.Stamps, error) {
 	var stamps []model.Stamps
 	db := Connection()
 	result := db.Where("users_id = ?", userid).Find(&stamps)
@@ -45,7 +45,7 @@ func Stamp_read_by_id(userid int) ([]model.Stamps, error) {
 	}
 }
 
-func Delete_stamp(id int) error{
+func DeleteStamp(id int) error {
 	db := Connection()
 	var stamp model.Stamps
 	// var stamp model.Stamps

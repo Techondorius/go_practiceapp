@@ -8,7 +8,7 @@ import (
 	"go_practiceapp/model"
 )
 
-func Create_User(User *model.Users) (model.Users, error) {
+func CreateUser(User *model.Users) (model.Users, error) {
 	db := Connection()
 	user := model.Users{FirstName: User.FirstName, LastName: User.LastName}
 	result := db.Create(&user)
@@ -18,7 +18,7 @@ func Create_User(User *model.Users) (model.Users, error) {
 	return user, nil
 }
 
-func Read_User() ([]model.Users, error) {
+func ReadUser() ([]model.Users, error) {
 	var users []model.Users
 	db := Connection()
 	result := db.Find(&users)
@@ -29,7 +29,7 @@ func Read_User() ([]model.Users, error) {
 	}
 }
 
-func Update_User(User *model.Users) error {
+func UpdateUser(User *model.Users) error {
 	db := Connection()
 	var user model.Users
 	result := db.Model(&user).Where("id = ?", User.ID).Updates(User)
@@ -42,7 +42,7 @@ func Update_User(User *model.Users) error {
 	return nil
 }
 
-func Delete_User(User *model.Users) error{
+func DeleteUser(User *model.Users) error {
 	db := Connection()
 	var user model.Users
 	result := db.Model(&user).Where("id = ?", User.ID).Delete(User)
