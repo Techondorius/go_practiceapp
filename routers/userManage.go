@@ -66,7 +66,6 @@ func EditUser(c *gin.Context){
 	err := c.Bind(&form)
 	var err2 error
 	form.ID, err2 = strconv.Atoi(c.Param("userId"))
-	log.Println(form)
 
 	if err != nil || err2 != nil{
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -99,7 +98,6 @@ func DeleteUser(c *gin.Context){
 	err := c.Bind(&form)
 	var err2 error
 	form.ID, err2 = strconv.Atoi(c.Param("userId"))
-	log.Println(form)
 
 	if err2 != nil{
 		c.JSON(http.StatusBadRequest, gin.H{
