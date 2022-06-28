@@ -22,7 +22,6 @@ func NewUser(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	log.Println(form.FirstName)
 	if responce, err := database.CreateUser(&form); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Bad request",
@@ -92,7 +91,6 @@ func EditUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	var form model.Users
-	c.Bind(&form)
 	form.ID, _ = strconv.Atoi(c.Param("userId"))
 	if err := database.DeleteUser(&form); err != nil {
 		c.JSON(400, gin.H{

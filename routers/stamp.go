@@ -52,11 +52,20 @@ func StampUp(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	up_datetime := time.Now()
 
-	if _, err := database.UpdateStampUpTime(userid, up_datetime); err != nil {
+	if r, err := database.UpdateStampUpTime(userid, up_datetime); err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
 	} else {
-		c.JSON(200, gin.H{"message": "list"})
+		c.JSON(200, gin.H{
+			"detail":  map[string]any{
+				"ID": r.ID,
+				"UsersID": r.UsersID,
+				"In_datetime": r.In_datetime.Format("2006/01/02 03:04"),
+				"Up_datetime": r.Up_datetime.Format("2006/01/02 03:04"),
+				"Hourly_wage": r.Hourly_wage,
+			},
+			"message": "Stamped successfully",
+		})
 	}
 }
 
