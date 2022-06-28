@@ -14,7 +14,7 @@ import (
 
 func StampGetByUser(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
-	stamps, err := database.ReadStampById(userid)
+	stamps, err := database.ReadStampByUserId(userid)
 	user, err2 := database.ReadUserByID(userid)
 	if err != nil || err2 != nil {
 		log.Println(err, err2)

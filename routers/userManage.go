@@ -21,6 +21,7 @@ func NewUser(c *gin.Context) {
 		log.Println(err)
 		return
 	}
+	log.Println(form.FirstName)
 	if responce, err := database.CreateUser(&form); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Bad request",

@@ -30,6 +30,7 @@ func main() {
 
 	edit := r.Group("/edit")
 	{
+		edit.PUT("/:stampId", routers.StampUpdate)
 		edit.DELETE("/:stampId", routers.StampDelete)
 	}
 

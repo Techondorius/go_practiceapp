@@ -12,7 +12,7 @@ import (
 	"go_practiceapp/model"
 )
 
-func User_in(c *gin.Context) {
+func StampIn(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	user, err2 := database.ReadUserByID(userid)
 	if err2 != nil {
@@ -26,7 +26,7 @@ func User_in(c *gin.Context) {
 		UsersID:     userid,
 		Hourly_wage: user.Hourly_wage,
 	}
-
+	log.Println(form.In_datetime)
 	if err := c.Bind(&form); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
 		log.Println(err)
@@ -43,7 +43,7 @@ func User_in(c *gin.Context) {
 	}
 }
 
-func User_up(c *gin.Context) {
+func StampUp(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	up_datetime := time.Now()
 
@@ -55,7 +55,31 @@ func User_up(c *gin.Context) {
 	}
 }
 
-func Stamp_delete(c *gin.Context) {
+func StampUpdate(c *gin.Context) {
+	stampid, err := strconv.Atoi(c.Param("stampId"))
+	if err != nil {
+		c.JSON(400, gin.H{"status": err.Error()})
+		log.Println(err)
+		return
+	}
+
+	var times model.StampsDatetime
+	if err2 := c.Bind(&times); err2 != nil{
+		c.JSON(400, gin.H{"status": err.Error()})
+		log.Println(err)
+		return
+	}
+
+	indatetime, _ := time.Parse("2006/01/02 15:04:05 (MST)", times.In_datetime + " (JST)")
+	updatetime, _ := time.Parse("2006/01/02 15:04:05 (MST)", times.Up_datetime + " (JST)")
+
+	if r, err := database.UpdateStampTimestamp(stampid, indatetime, updatetime); err != nil {
+		c.JSON(400, gin.H{"status": err.Error()})
+	} else {
+		c.JSON(200, gin.H{"message": r.OnlyDatetimes()})
+	}
+}
+
 func StampDelete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("stampId"))
 	if err != nil {

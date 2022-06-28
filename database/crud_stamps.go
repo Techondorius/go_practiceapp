@@ -4,15 +4,17 @@ import (
 	"errors"
 	"go_practiceapp/model"
 	"time"
+	"log"
 )
 
-func CreateStamp(Stamp model.Stamps) (model.Stamps, error) {
+func CreateStamp(stamp model.Stamps) (model.Stamps, error) {
 	db := Connection()
-	result := db.Create(&Stamp)
+	log.Println(stamp.Up_datetime)
+	result := db.Create(&stamp)
 	if result.Error != nil {
-		return Stamp, result.Error
+		return stamp, result.Error
 	}
-	return Stamp, nil
+	return stamp, nil
 }
 
 func UpdateStampUpTime(userid int, up_datetime time.Time) error {
@@ -32,7 +34,22 @@ func UpdateStampUpTime(userid int, up_datetime time.Time) error {
 	return nil
 }
 
-func ReadStampById(userid int) ([]model.Stamps, error) {
+func UpdateStampTimestamp(stampid int, in_datetime time.Time, up_datetime time.Time) (model.Stamps, error) {
+	db := Connection()
+	stamp := model.Stamps{
+		ID: stampid,
+		In_datetime: in_datetime,
+		Up_datetime: &up_datetime,
+	}
+	update := db.Debug().Table("stamps").Select("in_datetime", "up_datetime").Where("id = ?", stamp.ID).Updates(map[string]interface{}{"in_datetime":stamp.In_datetime, "up_datetime":stamp.Up_datetime})
+	if update.RowsAffected == 0 {
+		return model.Stamps{}, errors.New("no records updated")
+	} else {
+		return stamp, nil
+	}
+}
+
+func ReadStampByUserId(userid int) ([]model.Stamps, error) {
 	var stamps []model.Stamps
 	db := Connection()
 	result := db.Where("users_id = ?", userid).Find(&stamps)
