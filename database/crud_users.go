@@ -29,6 +29,17 @@ func ReadUser() ([]model.Users, error) {
 	}
 }
 
+func ReadUserByID(id int) (model.Users, error) {
+	var users model.Users
+	db := Connection()
+	result := db.Where("id = ?", id).Find(&users)
+	if result.Error != nil {
+		return users, result.Error
+	} else {
+		return users, nil
+	}
+}
+
 func UpdateUser(User *model.Users) error {
 	db := Connection()
 	var user model.Users

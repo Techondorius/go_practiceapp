@@ -14,9 +14,17 @@ import (
 
 func Stamps_by_user(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
-	if responce, err := database.StampReadById(userid); err != nil {
-		log.Println(err)
+	stamps, err := database.ReadStampById(userid)
+	user, err2 := database.ReadUserByID(userid)
+	if err != nil || err2 != nil {
+		log.Println(err, err2)
 	} else {
-		c.JSON(200, gin.H{"message": responce})
+		fee := 0
+		for _, res := range stamps {
+			t := res.Up_datetime.Sub(res.In_datetime)
+			fee += int(t.Minutes())
+			log.Println(user)
+		}
+		c.JSON(200, gin.H{"message": stamps})
 	}
 }

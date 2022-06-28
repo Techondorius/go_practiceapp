@@ -14,10 +14,17 @@ import (
 
 func User_in(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
+	user, err2 := database.ReadUserByID(userid)
+	if err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": err2.Error()})
+		log.Println(err2)
+		return
+	}
 
 	form := model.Stamps{
 		In_datetime: time.Now(),
 		UsersID:     userid,
+		Hourly_wage: user.Hourly_wage,
 	}
 
 	if err := c.Bind(&form); err != nil {
@@ -25,7 +32,7 @@ func User_in(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	if user, err := database.CreateStamp(&form); err != nil {
+	if user, err := database.CreateStamp(form); err != nil {
 		c.JSON(400, gin.H{"status": "Could not find user by id "})
 		log.Println(err)
 	} else {
