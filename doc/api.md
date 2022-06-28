@@ -1,0 +1,141 @@
+# API Document
+
+## ユーザー一覧取得 API
+
+### リクエスト
+
+```
+GET /userManage/getUser
+```
+
+### レスポンス
+
+#### 成功時
+
+| param                 | type   | description |
+| --------------------- | ------ | ----------- |
+| detail[].ID           | number | ユーザーID    |
+| detail[].FirstName    | string | 名前         |
+| detail[].LastName     | string | 苗字         |
+| detail[].Hourly_wage  | number | 時給         |
+
+```javascript
+{
+    "detail": [
+        {
+            "ID": number,
+            "FirstName": string,
+            "LastName": string,
+            "Hourly_wage": number
+        },
+        ...
+    ]
+}
+```
+
+## ユーザー作成 API
+
+### リクエスト
+
+```
+PUT /userManage/newUser
+```
+
+| param       | type   | description   |
+| ----------- | ------ | -----------   |
+| FirstName   | string | 名前           |
+| LastName    | string | 苗字           |
+| Hourly_wage | number | 時給(Optional) |
+
+
+```javascript
+{
+    "FirstName": string,
+    "LastName": string
+    "Hourly_wage": number
+}
+```
+
+### レスポンス
+
+#### 成功時
+
+| param               | type   | description |
+| ------------------- | ------ | ----------- |
+| message             | string | Created     |
+| detail[].ID         | number | ID          |
+| detail[].FirstName  | string | 名前         |
+| detail[].LastName   | string | 苗字         |
+| detail[].Hourly_wage| string | 時給         |
+
+
+```javascript
+{
+    "message": "Created"
+    "detail": {
+        "ID": number,
+        "FirstName": string,
+        "LastName": string
+        "Hourly_wage": number,
+    },
+    ...
+}
+```
+
+### 失敗時
+
+#### Request bodyが不完全な時
+
+400 Bad Request
+
+## ユーザー編集 API
+
+### リクエスト
+
+```
+PUT /userManage/editUser/{userID}
+```
+
+| param       | type   | description   |
+| ----------- | ------ | ------------- |
+| FirstName   | string | 名前(optional) |
+| LastName    | string | 苗字(optional) |
+| Hourly_wage | number | 時給(optional) |
+
+```javascript
+{
+    "FirstName": string,
+    "LastName": string
+    "Hourly_wage": number,
+}
+```
+
+### レスポンス
+
+#### 成功時
+
+| param              | type   | description |
+| ------------------ | ------ | ----------- |
+| message            | string | Updated     |
+| detail[].id        | number | イベント ID  |
+| detail[].FirstName | string | タイトル     |
+| detail[].LastName  | string | 主催者の名前  |
+
+```javascript
+{
+    "message": "Created"
+    "detail": {
+        "ID": number,
+        "FirstName": string,
+        "LastName": string
+        "Hourly_wage": number,
+    },
+    ...
+}
+```
+
+### 失敗時
+
+#### Request bodyが不完全な時
+
+400 Bad Request
