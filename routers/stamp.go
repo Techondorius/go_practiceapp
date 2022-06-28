@@ -56,6 +56,7 @@ func User_up(c *gin.Context) {
 }
 
 func Stamp_delete(c *gin.Context) {
+func StampDelete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("stampId"))
 	if err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})

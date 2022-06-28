@@ -12,7 +12,7 @@ import (
 	// "go_practiceapp/model"
 )
 
-func Stamps_by_user(c *gin.Context) {
+func StampGetByUser(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	stamps, err := database.ReadStampById(userid)
 	user, err2 := database.ReadUserByID(userid)

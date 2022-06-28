@@ -6,7 +6,7 @@ import (
 	"go_practiceapp/routers"
 )
 
-func main(){
+func main() {
 
 	r := gin.Default()
 
@@ -20,21 +20,21 @@ func main(){
 
 	stamp := r.Group("/stamp/:userId")
 	{
-		stamp.POST("/in", routers.User_in)
-		stamp.PUT("/up", routers.User_up)
+		stamp.POST("/in", routers.StampIn)
+		stamp.PUT("/up", routers.StampUp)
 	}
-	list:= r.Group("/list")
+	list := r.Group("/list")
 	{
-		list.GET("/byUser/:userId", routers.Stamps_by_user)
+		list.GET("/byUser/:userId", routers.StampGetByUser)
 	}
 
-	edit:= r.Group("/edit")
+	edit := r.Group("/edit")
 	{
-		edit.DELETE("/:stampId", routers.Stamp_delete)
+		edit.DELETE("/:stampId", routers.StampDelete)
 	}
 
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{ "message": "good", })
+		c.JSON(200, gin.H{"message": "good"})
 	})
 
 	r.Run()
