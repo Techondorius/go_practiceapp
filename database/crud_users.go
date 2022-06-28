@@ -3,8 +3,6 @@ package database
 import (
 	"errors"
 
-	// "gorm.io/gorm"
-
 	"go_practiceapp/model"
 )
 

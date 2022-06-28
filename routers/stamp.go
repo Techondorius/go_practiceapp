@@ -26,15 +26,16 @@ func StampIn(c *gin.Context) {
 		UsersID:     userid,
 		Hourly_wage: user.Hourly_wage,
 	}
-	log.Println(f.In_datetime)
 	if err := c.Bind(&f); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
 		log.Println(err)
 		return
 	}
+
 	if user, err := database.CreateStamp(f); err != nil {
 		c.JSON(400, gin.H{"status": "Could not find user by id "})
 		log.Println(err)
+		return
 	} else {
 		c.JSON(200, gin.H{
 			"detail":  map[string]any{
@@ -45,6 +46,7 @@ func StampIn(c *gin.Context) {
 			},
 			"message": "Stamped successfully",
 		})
+		return
 	}
 }
 
@@ -55,6 +57,7 @@ func StampUp(c *gin.Context) {
 	if r, err := database.UpdateStampUpTime(userid, up_datetime); err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
+		return
 	} else {
 		c.JSON(200, gin.H{
 			"detail":  map[string]any{
@@ -66,6 +69,7 @@ func StampUp(c *gin.Context) {
 			},
 			"message": "Stamped successfully",
 		})
+		return
 	}
 }
 
@@ -89,8 +93,10 @@ func StampUpdate(c *gin.Context) {
 
 	if r, err := database.UpdateStampTimestamp(stampid, indatetime, updatetime); err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})
+		return
 	} else {
 		c.JSON(200, gin.H{"message": r.OnlyDatetimes()})
+		return
 	}
 }
 
@@ -99,10 +105,12 @@ func StampDelete(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
+		return
 	} else if err := database.DeleteStamp(id); err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
+		return
 	} else {
-		c.JSON(200, gin.H{"message": "successfully up-ed"})
+		c.JSON(200, gin.H{"message": "successfully deleted"})
 	}
 }
