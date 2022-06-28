@@ -1,6 +1,7 @@
 package routers
 
 import (
+	// "fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -91,30 +92,19 @@ func EditUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	var form model.Users
-	err := c.Bind(&form)
-	var err2 error
-	form.ID, err2 = strconv.Atoi(c.Param("userId"))
-
-	if err2 != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": "Bad Request",
-			"detail": "Request has bad value",
-		})
-		log.Println(err, err2)
-		return
-	}
-
+	c.Bind(&form)
+	form.ID, _ = strconv.Atoi(c.Param("userId"))
 	if err := database.DeleteUser(&form); err != nil {
 		c.JSON(400, gin.H{
 			"message": "Bad request",
 			"detail":  "no records edited",
 		})
+		return
 	} else {
 		c.JSON(200, gin.H{
-			"detail": map[string]any{
-				"ID": form.ID,
-			},
 			"message": "Deleted",
 		})
+		c.Abort()
+		return
 	}
 }

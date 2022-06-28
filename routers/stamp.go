@@ -21,23 +21,28 @@ func StampIn(c *gin.Context) {
 		return
 	}
 
-	form := model.Stamps{
+	f := model.Stamps{
 		In_datetime: time.Now(),
 		UsersID:     userid,
 		Hourly_wage: user.Hourly_wage,
 	}
-	log.Println(form.In_datetime)
-	if err := c.Bind(&form); err != nil {
+	log.Println(f.In_datetime)
+	if err := c.Bind(&f); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
 		log.Println(err)
 		return
 	}
-	if user, err := database.CreateStamp(form); err != nil {
+	if user, err := database.CreateStamp(f); err != nil {
 		c.JSON(400, gin.H{"status": "Could not find user by id "})
 		log.Println(err)
 	} else {
 		c.JSON(200, gin.H{
-			"detail":  user,
+			"detail":  map[string]any{
+				"ID": user.ID,
+				"UsersID": user.UsersID,
+				"In_datetime": user.In_datetime.Format("2006/01/02 03:04"),
+				"Hourly_wage": user.Hourly_wage,
+			},
 			"message": "Stamped successfully",
 		})
 	}
@@ -47,7 +52,7 @@ func StampUp(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	up_datetime := time.Now()
 
-	if err := database.UpdateStampUpTime(userid, up_datetime); err != nil {
+	if _, err := database.UpdateStampUpTime(userid, up_datetime); err != nil {
 		c.JSON(400, gin.H{"status": err.Error()})
 		log.Println(err)
 	} else {

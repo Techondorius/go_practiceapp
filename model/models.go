@@ -37,7 +37,7 @@ func (user Users) DropStamps() map[string]any {
 func (stamp Stamps) OnlyDatetimes() map[string]any {
 	return map[string]any{
 		"ID": stamp.ID,
-		"In_datetime": stamp.In_datetime,
-		"Up_datetime": stamp.Up_datetime,
+		"In_datetime": stamp.In_datetime.Format("2006/01/02 03:04"),
+		"Up_datetime": stamp.Up_datetime.Format("2006/01/02 03:04"),
 	}
 }
