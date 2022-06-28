@@ -2,7 +2,7 @@ package routers
 
 import (
 	"strconv"
-	// "time"
+	"math"
 	"log"
 	// "net/http"
 
@@ -15,16 +15,19 @@ import (
 func StampGetByUser(c *gin.Context) {
 	userid, _ := strconv.Atoi(c.Param("userId"))
 	stamps, err := database.ReadStampByUserId(userid)
-	user, err2 := database.ReadUserByID(userid)
-	if err != nil || err2 != nil {
-		log.Println(err, err2)
+	if err != nil {
+		log.Println(err)
 	} else {
-		fee := 0
+		var fee float64 = 0
+		var s []interface{}
 		for _, res := range stamps {
 			t := res.Up_datetime.Sub(res.In_datetime)
-			fee += int(t.Minutes())
-			log.Println(user)
+			fee += float64(res.Hourly_wage) * t.Minutes() / 60
+			s = append(s, res.OnlyDatetimes())
 		}
-		c.JSON(200, gin.H{"message": stamps})
+		c.JSON(200, gin.H{
+			"stamps": s,
+			"fee": math.Round(fee),
+		})
 	}
 }
