@@ -4,12 +4,10 @@ import (
 	"errors"
 	"go_practiceapp/model"
 	"time"
-	"log"
 )
 
 func CreateStamp(stamp model.Stamps) (model.Stamps, error) {
 	db := Connection()
-	log.Println(stamp.Up_datetime)
 	result := db.Create(&stamp)
 	if result.Error != nil {
 		return stamp, result.Error
@@ -27,22 +25,21 @@ func UpdateStampUpTime(userid int, up_datetime time.Time) (model.Stamps, error) 
 		return model.Stamps{}, errors.New("couldn't select record to edit because there are too many stamps today")
 	}
 
-	update := db.Debug().Model(&stamps).Where("id = ?", stamps[0].ID).Select("up_datetime").Updates(map[string]interface{}{"up_datetime": up_datetime})
+	update := db.Debug().Model(&stamps).Where("id = ?", stamps[0].ID).Select("up_datetime").Updates(map[string]any{"up_datetime": up_datetime})
 	if update.RowsAffected == 0 {
 		return model.Stamps{}, errors.New("no records updated")
 	}
-	log.Println(stamps[0].Up_datetime)
 	return stamps[0], nil
 }
 
 func UpdateStampTimestamp(stampid int, in_datetime time.Time, up_datetime time.Time) (model.Stamps, error) {
 	db := Connection()
 	stamp := model.Stamps{
-		ID: stampid,
+		ID:          stampid,
 		In_datetime: in_datetime,
 		Up_datetime: &up_datetime,
 	}
-	update := db.Debug().Table("stamps").Select("in_datetime", "up_datetime").Where("id = ?", stamp.ID).Updates(map[string]interface{}{"in_datetime":stamp.In_datetime, "up_datetime":stamp.Up_datetime})
+	update := db.Debug().Table("stamps").Select("in_datetime", "up_datetime").Where("id = ?", stamp.ID).Updates(map[string]any{"in_datetime": stamp.In_datetime, "up_datetime": stamp.Up_datetime})
 	if update.RowsAffected == 0 {
 		return model.Stamps{}, errors.New("no records updated")
 	} else {
