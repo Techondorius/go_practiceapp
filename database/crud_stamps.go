@@ -19,7 +19,7 @@ func CreateStamp(stamp model.Stamps) (model.Stamps, error) {
 
 func UpdateStampUpTime(userid int, up_datetime time.Time) (model.Stamps, error) {
 	db := Connection()
-	var stamps model.Stamps
+	var stamps []model.Stamps
 
 	if find := db.Debug().Where("up_datetime IS NULL AND users_id = ? AND in_datetime BETWEEN ? AND ?", userid, up_datetime.AddDate(0, 0, -1), up_datetime).Find(&stamps); find.RowsAffected < 1 {
 		return model.Stamps{}, errors.New("couldn't find record where up_datetime is null")
@@ -27,11 +27,12 @@ func UpdateStampUpTime(userid int, up_datetime time.Time) (model.Stamps, error) 
 		return model.Stamps{}, errors.New("couldn't select record to edit because there are too many stamps today")
 	}
 
-	update := db.Debug().Table("stamps").Where("id = ?", stamps.ID).Select("up_datetime").Updates(map[string]interface{}{"up_datetime": up_datetime})
+	update := db.Debug().Model(&stamps).Where("id = ?", stamps[0].ID).Select("up_datetime").Updates(map[string]interface{}{"up_datetime": up_datetime})
 	if update.RowsAffected == 0 {
 		return model.Stamps{}, errors.New("no records updated")
 	}
-	return stamps, nil
+	log.Println(stamps[0].Up_datetime)
+	return stamps[0], nil
 }
 
 func UpdateStampTimestamp(stampid int, in_datetime time.Time, up_datetime time.Time) (model.Stamps, error) {
