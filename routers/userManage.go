@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/imdario/mergo"
 
 	"go_practiceapp/database"
 	"go_practiceapp/model"
@@ -15,27 +16,19 @@ import (
 func NewUser(c *gin.Context) {
 	var form model.Users
 	if err := c.Bind(&form); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": "Bad Request",
-			"detail": "Request has bad value",
-		})
+		c.JSON(http.StatusBadRequest, nil)
 		log.Println(err)
 		return
 	}
 	if responce, err := database.CreateUser(&form); err != nil {
-		c.JSON(400, gin.H{
-			"message": "Bad request",
-			"detail":  "something error has occured",
-		})
-	} else {
+		c.JSON(400, nil)
+		return
+		} else {
 		c.JSON(200, gin.H{
-			"detail": map[string]any{
-				"ID":        responce.ID,
-				"FirstName": responce.FirstName,
-				"LastName":  responce.LastName,
-			},
+			"detail": responce.DropStamps(),
 			"message": "Created",
 		})
+		return
 	}
 }
 
@@ -59,31 +52,17 @@ func ShowUser(c *gin.Context) {
 
 func EditUser(c *gin.Context) {
 	var form model.Users
-	err := c.Bind(&form)
-	var err2 error
-	form.ID, err2 = strconv.Atoi(c.Param("userId"))
+	_ = c.Bind(&form)
+	form.ID, _ = strconv.Atoi(c.Param("userId"))
 
-	if err != nil || err2 != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": "Bad Request",
-			"detail": "Request has bad value",
-		})
-		log.Println(err, err2)
-		return
-	}
+	u, _ := database.ReadUserByID(form.ID)
 
-	if err := database.UpdateUser(&form); err != nil {
-		c.JSON(400, gin.H{
-			"message": "Bad request",
-			"detail":  "no records edited",
-		})
+	_ = mergo.Merge(&form, u)
+	if user, err := database.UpdateUser(&form); err != nil {
+		c.JSON(400, nil)
 	} else {
 		c.JSON(200, gin.H{
-			"detail": map[string]any{
-				"ID":        form.ID,
-				"FirstName": form.FirstName,
-				"LastName":  form.LastName,
-			},
+			"detail": user.DropStamps(),
 			"message": "Updated",
 		})
 	}

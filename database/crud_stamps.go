@@ -15,21 +15,22 @@ func CreateStamp(stamp model.Stamps) (model.Stamps, error) {
 	return stamp, nil
 }
 
-func UpdateStampUpTime(userid int, up_datetime time.Time) (model.Stamps, error) {
+// stampsテーブルからup_datetimeの前24時間以内にINがStampされてて、up_datetimeがNULLのレコードを返します。
+func ReadStampsByUserID(userid int, up_datetime time.Time) ([]model.Stamps) {
 	db := Connection()
 	var stamps []model.Stamps
+	db.Where("up_datetime IS NULL AND users_id = ? AND in_datetime BETWEEN ? AND ?", userid, up_datetime.AddDate(0, 0, -1), up_datetime).Find(&stamps)
+	return stamps
+}
 
-	if find := db.Debug().Where("up_datetime IS NULL AND users_id = ? AND in_datetime BETWEEN ? AND ?", userid, up_datetime.AddDate(0, 0, -1), up_datetime).Find(&stamps); find.RowsAffected < 1 {
-		return model.Stamps{}, errors.New("couldn't find record where up_datetime is null")
-	} else if find.RowsAffected > 1 {
-		return model.Stamps{}, errors.New("couldn't select record to edit because there are too many stamps today")
-	}
-
-	update := db.Debug().Model(&stamps).Where("id = ?", stamps[0].ID).Select("up_datetime").Updates(map[string]any{"up_datetime": up_datetime})
-	if update.RowsAffected == 0 {
+// 
+func UpdateStampUpTime(s model.Stamps, up_datetime time.Time) (model.Stamps, error){
+	db := Connection()
+	s.Up_datetime = &up_datetime
+	if update := db.Debug().Select("up_datetime").Updates(s); update.RowsAffected == 0 {
 		return model.Stamps{}, errors.New("no records updated")
 	}
-	return stamps[0], nil
+	return s, nil
 }
 
 func UpdateStampTimestamp(stampid int, in_datetime time.Time, up_datetime time.Time) (model.Stamps, error) {

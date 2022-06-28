@@ -6,14 +6,13 @@ import (
 	"go_practiceapp/model"
 )
 
-func CreateUser(User *model.Users) (model.Users, error) {
+func CreateUser(user *model.Users) (model.Users, error) {
 	db := Connection()
-	user := model.Users{FirstName: User.FirstName, LastName: User.LastName}
-	result := db.Create(&user)
+	result := db.Debug().Create(user)
 	if result.Error != nil {
-		return user, result.Error
+		return *user, result.Error
 	}
-	return user, nil
+	return *user, nil
 }
 
 func ReadUser() ([]model.Users, error) {
@@ -38,17 +37,17 @@ func ReadUserByID(id int) (model.Users, error) {
 	}
 }
 
-func UpdateUser(User *model.Users) error {
+func UpdateUser(User *model.Users) (model.Users, error) {
 	db := Connection()
 	var user model.Users
 	result := db.Model(&user).Where("id = ?", User.ID).Updates(User)
 
 	if result.Error != nil {
-		return result.Error
+		return user, result.Error
 	} else if result.RowsAffected == 0 {
-		return errors.New("no records updated")
+		return user, errors.New("no records updated")
 	}
-	return nil
+	return user, nil
 }
 
 func DeleteUser(User *model.Users) error {

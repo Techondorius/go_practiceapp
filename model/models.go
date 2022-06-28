@@ -14,8 +14,8 @@ type Stamps struct {
 
 type Users struct {
 	ID          int			`gorm:"primaryKey"`
-	FirstName	string		`gorm:"not null" binding:"required"`
-	LastName	string		`gorm:"not null" binding:"required"`
+	FirstName	string		`gorm:"not null"`
+	LastName	string		`gorm:"not null"`
 	Hourly_wage int			`gorm:"not null;default:1000"`
 	Stamps  	[]Stamps	`gorm:"foreignKey:UsersID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
