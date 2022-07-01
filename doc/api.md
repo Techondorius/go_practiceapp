@@ -114,12 +114,13 @@ PUT /userManage/editUser/{userID}
 
 #### 成功時
 
-| param              | type   | description |
-| ------------------ | ------ | ----------- |
-| message            | string | Updated     |
-| detail[].id        | number | イベント ID  |
-| detail[].FirstName | string | タイトル     |
-| detail[].LastName  | string | 主催者の名前  |
+| param               | type   | description |
+| ------------------- | ------ | ----------- |
+| message             | string | Created     |
+| detail[].ID         | number | ID          |
+| detail[].FirstName  | string | 名前         |
+| detail[].LastName   | string | 苗字         |
+| detail[].Hourly_wage| string | 時給         |
 
 ```javascript
 {
@@ -131,6 +132,72 @@ PUT /userManage/editUser/{userID}
         "Hourly_wage": number,
     },
     ...
+}
+```
+
+### 失敗時
+
+#### Request bodyが不完全な時
+
+400 Bad Request
+
+## ユーザー編集 API
+
+### リクエスト
+
+```
+DELETE /userManage/deleteUser/{userID}
+```
+
+### レスポンス
+
+#### 成功時
+
+| param               | type   | description |
+| ------------------- | ------ | ----------- |
+| message             | string | Deleted     |
+
+```javascript
+{
+    "message": "Deleted"
+}
+```
+
+### 失敗時
+
+#### Request bodyが不完全な時
+
+400 Bad Request
+
+## ユーザー編集 API
+
+### リクエスト
+
+```
+POST /stamp/{userID}/in
+```
+
+### レスポンス
+
+#### 成功時
+
+| param                | type     | description          |
+| -------------------- | -------- | -------------------- |
+| message              | string   | Stamped successfully |
+| detail[].ID          | number   | スタンプID            |
+| detail[].UsersID     | number   | ユーザーID            |
+| detail[].In_datetime | datetime | 出勤時刻              |
+| detail[].Hourly_wage | number   | 時給                  |
+
+```javascript
+{
+    "message": "Stamped successfully"
+    "detail": {
+        "ID": 4,
+        "UsersID": 4,
+        "Hourly_wage": 1000,
+        "In_datetime": "2022/06/30 06:36"
+    }
 }
 ```
 

@@ -72,10 +72,7 @@ func DeleteUser(c *gin.Context) {
 	var form model.Users
 	form.ID, _ = strconv.Atoi(c.Param("userId"))
 	if err := database.DeleteUser(&form); err != nil {
-		c.JSON(400, gin.H{
-			"message": "Bad request",
-			"detail":  "no records edited",
-		})
+		c.JSON(400, nil)
 		return
 	} else {
 		c.JSON(200, gin.H{
