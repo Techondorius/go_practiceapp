@@ -6,3 +6,9 @@
 
 [api](./doc/api.md)
 
+# 起動方法
+
+Docker version 20.10.14 にて
+
+`docker compose -f compose.yml up --build`
+
