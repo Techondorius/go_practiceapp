@@ -1,35 +1,27 @@
-version: '3.9'
-
+version: '3'
 services:
-  app:
-    container_name: app
+  frontend:
     build:
-      context: .
-      dockerfile: ./docker/dev_app/Dockerfile
-    ports:
-      - "3000:8080"
+      dockerfile: ./docker/dev/Dockerfile
+      context: ./frontend
     volumes:
-      - .:/go/src
+    - ./frontend:/src
     tty: true
-    depends_on:
-      - "db"
-    environment:
-      TZ: Asia/Tokyo
+    ports:
+    - 3000:3000
+    - 24678:24678
+    command: sh -c 'yarn install && yarn run dev'
 
-
-
-  db:
-    container_name: db
-    image: mysql:8.0.15
-    volumes:
-      - ./tmp/mysql:/var/lib/mysql
-    environment:
-      TZ: Asia/Tokyo
-      MYSQL_DATABASE: gin_app
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    command: mysqld
-    cap_add:
-      - SYS_NICE
-
-    # depends_on:
-    #   - "app"
+  backend:
+    build:
+      dockerfile: ./docker/dev/Dockerfile
+      context: ./backend
+    tty: true
+    volumes: 
+    - ./backend:/src
+    ports:
+    - 8000:8080
+    command: 
+      sh -c 'air -c .air.toml'
+networks:
+  app_network:
