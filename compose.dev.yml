@@ -1,0 +1,27 @@
+version: '3'
+services:
+  frontend:
+    build:
+      dockerfile: ./docker/dev/Dockerfile
+      context: ./frontend
+    volumes:
+    - ./frontend:/src
+    tty: true
+    ports:
+    - 3000:3000
+    - 24678:24678
+    command: sh -c 'yarn install && yarn run dev'
+
+  backend:
+    build:
+      dockerfile: ./docker/dev/Dockerfile
+      context: ./backend
+    tty: true
+    volumes: 
+    - ./backend:/src
+    ports:
+    - 8000:8080
+    command: 
+      sh -c 'air -c .air.toml'
+networks:
+  app_network:
